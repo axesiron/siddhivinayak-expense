@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Company Settings · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">Company Settings</h5>
+
+<div class="panel" style="max-width:620px;">
+  <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+      <div class="col-12">
+        <label class="form-label">Company Name</label>
+        <input type="text" name="company_name" class="form-control" value="{{ settings.company_name }}" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Address Line 1</label>
+        <input type="text" name="address_line1" class="form-control" value="{{ settings.address_line1 }}">
+      </div>
+      <div class="col-12">
+        <label class="form-label">Address Line 2</label>
+        <input type="text" name="address_line2" class="form-control" value="{{ settings.address_line2 }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Mobile Number</label>
+        <input type="text" name="mobile" class="form-control" value="{{ settings.mobile }}">
+      </div>
+      <div class="col-12">
+        <label class="form-label">Company Logo</label>
+        {% if settings.logo_path %}
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <img src="{{ url_for('static', filename='images/' + settings.logo_path.split('/')[-1]) }}" alt="Company logo" style="height:48px;border-radius:8px;border:1px solid var(--border);">
+          <span class="small text-muted">Current logo — uploading a new file will replace it.</span>
+        </div>
+        {% endif %}
+        <input type="file" name="logo" accept=".png,.jpg,.jpeg" class="form-control">
+        <div class="small text-muted mt-1">PNG or JPG. Appears in the top-left of every generated Excel report.</div>
+      </div>
+    </div>
+    <div class="text-muted small mt-3">This information appears in the header of every generated Excel expense sheet.</div>
+    <div class="d-flex gap-2 mt-3">
+      <button type="submit" class="btn btn-brand px-4">Save Settings</button>
+    </div>
+  </form>
+  {% if settings.logo_path %}
+  <form method="POST" action="{{ url_for('admin.remove_logo') }}" class="d-inline mt-2">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-outline-danger px-4">Remove Logo</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

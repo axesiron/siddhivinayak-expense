@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Reports · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">Reports &amp; Excel Exports</h5>
+
+<div class="row g-3">
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100">
+      <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+      <div class="panel-title mt-2">All Employees Report</div>
+      <div class="panel-sub">Multi-sheet workbook — one sheet per employee, with company header and totals.</div>
+      <a href="{{ url_for('excel.export_all_employees') }}" class="btn btn-brand btn-sm"><i class="fa-solid fa-file-excel me-1"></i>Download</a>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100">
+      <div class="stat-icon"><i class="fa-solid fa-user"></i></div>
+      <div class="panel-title mt-2">Employee-wise Report</div>
+      <div class="panel-sub">Pick an employee and a date range for a dedicated report + Excel export.</div>
+      <a href="{{ url_for('admin.employee_report') }}" class="btn btn-outline-brand btn-sm">Open Report</a>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100">
+      <div class="stat-icon"><i class="fa-solid fa-road"></i></div>
+      <div class="panel-title mt-2">KM Rate Settings</div>
+      <div class="panel-sub">Configure the per-KM rate used to auto-calculate bike/car totals.</div>
+      <a href="{{ url_for('admin.rates') }}" class="btn btn-outline-brand btn-sm">Manage Rates</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

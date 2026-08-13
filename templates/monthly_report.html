@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Monthly Report · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">Monthly Expense Report</h5>
+
+<div class="panel mb-3">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label mb-1">Month</label>
+      <select name="month" class="form-select form-select-sm">
+        {% for i in range(1,13) %}
+        <option value="{{ i }}" {{ 'selected' if i == month }}>{{ ["January","February","March","April","May","June","July","August","September","October","November","December"][i-1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label mb-1">Year</label>
+      <input type="number" name="year" value="{{ year }}" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-brand btn-sm w-100">View</button>
+    </div>
+    <div class="col-md-2">
+      <a class="btn btn-outline-brand btn-sm w-100" href="{{ url_for('excel.export_monthly', month=month, year=year) }}"><i class="fa-solid fa-file-excel me-1"></i>Excel</a>
+    </div>
+  </form>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-2"><div class="stat-card py-3"><div class="stat-label">KM</div><div class="stat-value fs-5">{{ "%.0f"|format(summary.km) }}</div></div></div>
+  <div class="col-6 col-md-2"><div class="stat-card py-3"><div class="stat-label">Food</div><div class="stat-value fs-5">₹{{ "%.0f"|format(summary.food) }}</div></div></div>
+  <div class="col-6 col-md-2"><div class="stat-card py-3"><div class="stat-label">Transport</div><div class="stat-value fs-5">₹{{ "%.0f"|format(summary.transport) }}</div></div></div>
+  <div class="col-6 col-md-2"><div class="stat-card py-3"><div class="stat-label">CNG/Bus</div><div class="stat-value fs-5">₹{{ "%.0f"|format(summary.cng_bus) }}</div></div></div>
+  <div class="col-6 col-md-2"><div class="stat-card py-3"><div class="stat-label">Other</div><div class="stat-value fs-5">₹{{ "%.0f"|format(summary.other) }}</div></div></div>
+  <div class="col-6 col-md-2"><div class="stat-card py-3" style="background:linear-gradient(135deg,#1f4e5f,#2f7c8f);color:#fff;"><div class="stat-label" style="color:rgba(255,255,255,.75);">Grand Total</div><div class="stat-value fs-5">₹{{ "%.0f"|format(summary.grand_total) }}</div></div></div>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead><tr><th>Date</th><th>Reason</th><th>Mode</th><th>Route</th><th>KM</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for e in items %}
+        <tr>
+          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td>{{ e.reason }}</td>
+          <td class="text-capitalize">{{ e.mode }}</td>
+          <td>{{ e.from_location }} → {{ e.to_location }}</td>
+          <td>{{ e.km|int if e.km else "—" }}</td>
+          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No expenses for this month.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

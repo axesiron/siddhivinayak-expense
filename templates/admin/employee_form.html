@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if employee else 'Add' }} Employee · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">{{ 'Edit Employee' if employee else 'Add New Employee' }}</h5>
+
+<div class="panel" style="max-width:640px;">
+  <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-control" value="{{ employee.name if employee else '' }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" value="{{ employee.email if employee else '' }}" {{ 'readonly' if employee else '' }} required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Mobile</label>
+        <input type="text" name="mobile" class="form-control" value="{{ employee.mobile if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Designation</label>
+        <input type="text" name="designation" class="form-control" value="{{ employee.designation if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Department</label>
+        <input type="text" name="department" class="form-control" value="{{ employee.department if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Role</label>
+        <select name="role" class="form-select">
+          <option value="employee" {{ 'selected' if employee and employee.role == 'employee' }}>Employee</option>
+          <option value="admin" {{ 'selected' if employee and employee.role == 'admin' }}>Admin</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">{{ 'New Password (leave blank to keep)' if employee else 'Password' }}</label>
+        <input type="password" name="password" class="form-control" {{ '' if employee else 'required' }}>
+      </div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-brand px-4">{{ 'Update' if employee else 'Create' }} Employee</button>
+      <a href="{{ url_for('admin.employees') }}" class="btn btn-outline-brand px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

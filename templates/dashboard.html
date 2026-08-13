@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · {{ app_name }}{% endblock %}
+{% block content %}
+
+{% set hour = 12 %}
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Good day, {{ current_user.name.split(' ')[0] }} 👋</h4>
+    <div class="text-muted small">{{ current_user.designation }} · Period {{ period_from.strftime('%d %b %Y') }} → {{ period_to.strftime('%d %b %Y') }}</div>
+  </div>
+  <a href="{{ url_for('employee.add_expense') }}" class="btn btn-brand"><i class="fa-solid fa-circle-plus me-1"></i> Add Daily Expense</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
+      <div class="stat-label">Today's Expense</div>
+      <div class="stat-value">₹{{ "%.0f"|format(stats.today) }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-calendar-week"></i></div>
+      <div class="stat-label">This Week</div>
+      <div class="stat-value">₹{{ "%.0f"|format(stats.week) }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-calendar"></i></div>
+      <div class="stat-label">This Month</div>
+      <div class="stat-value">₹{{ "%.0f"|format(stats.month) }}</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div class="stat-label">This Year</div>
+      <div class="stat-value">₹{{ "%.0f"|format(stats.year) }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="stat-card" style="background:linear-gradient(135deg,#1f4e5f,#2f7c8f);color:#fff;">
+      <div class="stat-icon" style="background:rgba(255,255,255,.15);color:#fff;"><i class="fa-solid fa-wallet"></i></div>
+      <div class="stat-label" style="color:rgba(255,255,255,.75);">Total Expense (All Time)</div>
+      <div class="stat-value">₹{{ "%.0f"|format(stats.total) }}</div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="panel-title mb-0">Recent Expenses</div>
+        <a href="{{ url_for('employee.expenses') }}" class="small text-decoration-none">View all →</a>
+      </div>
+      {% if recent %}
+      <div class="table-responsive">
+        <table class="table-modern">
+          <thead><tr><th>Date</th><th>Reason</th><th>Mode</th><th>Route</th><th>Total</th></tr></thead>
+          <tbody>
+            {% for e in recent %}
+            <tr>
+              <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+              <td>{{ e.reason }}</td>
+              <td class="text-capitalize">{{ e.mode }}</td>
+              <td>{{ e.from_location }} → {{ e.to_location }}</td>
+              <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted small mb-0">No expenses recorded yet. Tap "Add Daily Expense" to get started.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<a href="{{ url_for('employee.add_expense') }}" class="fab-add d-lg-none"><i class="fa-solid fa-plus"></i></a>
+{% endblock %}

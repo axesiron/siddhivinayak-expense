@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Employee-wise Report · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">Employee-wise Report</h5>
+
+<div class="panel mb-3">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label mb-1">Employee</label>
+      <select name="employee_id" class="form-select form-select-sm" required>
+        <option value="">Select employee</option>
+        {% for emp in employees %}
+        <option value="{{ emp.id }}" {{ 'selected' if employee and employee.id == emp.id }}>{{ emp.name }} — {{ emp.designation }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label mb-1">From Date</label>
+      <input type="date" name="from_date" value="{{ from_date or '' }}" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label mb-1">To Date</label>
+      <input type="date" name="to_date" value="{{ to_date or '' }}" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-brand btn-sm w-100">Generate</button>
+    </div>
+  </form>
+</div>
+
+{% if employee %}
+<div class="panel mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <div class="fw-bold fs-5">{{ employee.name }}</div>
+    <div class="text-muted small">{{ employee.designation }} · {{ employee.employee_code }} · Period: {{ from_date or 'Start' }} → {{ to_date or 'Today' }}</div>
+  </div>
+  <a href="{{ url_for('excel.export_employee', employee_id=employee.id, from_date=from_date, to_date=to_date) }}" class="btn btn-brand btn-sm"><i class="fa-solid fa-file-excel me-1"></i>Download Excel</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Transactions</div><div class="stat-value fs-4">{{ summary.count }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Total KM</div><div class="stat-value fs-4">{{ "%.0f"|format(summary.km) }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Food + Transport</div><div class="stat-value fs-4">₹{{ "%.0f"|format(summary.food + summary.transport) }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3" style="background:linear-gradient(135deg,#1f4e5f,#2f7c8f);color:#fff;"><div class="stat-label" style="color:rgba(255,255,255,.75);">Total</div><div class="stat-value fs-4">₹{{ "%.0f"|format(summary.grand_total) }}</div></div></div>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead><tr><th>Date</th><th>Reason</th><th>Mode</th><th>Route</th><th>KM</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for e in items %}
+        <tr>
+          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td>{{ e.reason }}</td>
+          <td class="text-capitalize">{{ e.mode }}</td>
+          <td>{{ e.from_location }} → {{ e.to_location }}</td>
+          <td>{{ e.km|int if e.km else "—" }}</td>
+          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No expenses in this period.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="panel text-center text-muted py-5">Select an employee above to generate their report.</div>
+{% endif %}
+{% endblock %}

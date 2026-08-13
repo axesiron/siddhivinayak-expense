@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}KM Rates · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">KM Rate Management</h5>
+
+<div class="panel" style="max-width:520px;">
+  <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Bike Rate (₹/km)</label>
+        <input type="number" step="0.01" name="bike_rate" class="form-control" value="{{ rates.bike_rate }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Car Rate (₹/km)</label>
+        <input type="number" step="0.01" name="car_rate" class="form-control" value="{{ rates.car_rate }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Other Vehicle Rate (₹/km)</label>
+        <input type="number" step="0.01" name="other_rate" class="form-control" value="{{ rates.other_rate }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Rounding Rule</label>
+        <select name="rounding" class="form-select">
+          <option value="nearest" {{ 'selected' if rates.rounding == 'nearest' }}>Nearest Rupee</option>
+          <option value="up" {{ 'selected' if rates.rounding == 'up' }}>Round Up</option>
+          <option value="down" {{ 'selected' if rates.rounding == 'down' }}>Round Down</option>
+          <option value="none" {{ 'selected' if rates.rounding == 'none' }}>No Rounding (2 decimals)</option>
+        </select>
+      </div>
+    </div>
+    <div class="text-muted small mt-3">
+      When Mode = Bike, KM × Bike Rate is added to the total automatically.<br>
+      When Mode = Car, KM × Car Rate is used instead.<br>
+      For Bus/Train/Auto/Cab/Other, KM is not auto-costed — use the CNG/Bus field.
+    </div>
+    <button type="submit" class="btn btn-brand px-4 mt-3">Save Rates</button>
+  </form>
+</div>
+{% endblock %}

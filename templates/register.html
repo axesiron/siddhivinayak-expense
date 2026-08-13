@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Register · {{ app_name }}{% endblock %}
+{% block auth_content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="max-width:520px;">
+    <div class="auth-logo"><i class="fa-solid fa-user-plus"></i></div>
+    <div class="auth-title">Create your account</div>
+    <div class="auth-sub">Register as an employee of Siddhivinayak Engineering &amp; Trading Corporation</div>
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Mobile Number</label>
+          <input type="text" name="mobile" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Designation</label>
+          <input type="text" name="designation" class="form-control" placeholder="e.g. Sales Engineer">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Department</label>
+          <input type="text" name="department" class="form-control">
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" name="confirm_password" class="form-control" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-brand w-100 py-2 mt-4">Create Account</button>
+    </form>
+
+    <div class="text-center mt-3 small text-muted">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard · {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Admin Dashboard</h4>
+    <div class="text-muted small">Overview of all employee expenses</div>
+  </div>
+  <a href="{{ url_for('excel.export_all_employees') }}" class="btn btn-brand"><i class="fa-solid fa-file-excel me-1"></i>Export All Employees</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg">
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-label">Total Employees</div><div class="stat-value">{{ stats.total_employees }}</div></div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div><div class="stat-label">Today's Expenses</div><div class="stat-value">₹{{ "%.0f"|format(stats.today) }}</div></div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-calendar"></i></div><div class="stat-label">This Month</div><div class="stat-value">₹{{ "%.0f"|format(stats.month) }}</div></div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div><div class="stat-label">This Year</div><div class="stat-value">₹{{ "%.0f"|format(stats.year) }}</div></div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card" style="background:linear-gradient(135deg,#1f4e5f,#2f7c8f);color:#fff;"><div class="stat-icon" style="background:rgba(255,255,255,.15);color:#fff;"><i class="fa-solid fa-sack-dollar"></i></div><div class="stat-label" style="color:rgba(255,255,255,.75);">Total Expenses</div><div class="stat-value">₹{{ "%.0f"|format(stats.total) }}</div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="panel-title mb-0">Recent Activity</div>
+    <a href="{{ url_for('admin.all_expenses') }}" class="small text-decoration-none">View all →</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead><tr><th>Employee</th><th>Date</th><th>Reason</th><th>Mode</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for e in recent_expenses %}
+        <tr>
+          <td>{{ e.employee.name }}</td>
+          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td>{{ e.reason }}</td>
+          <td class="text-capitalize">{{ e.mode }}</td>
+          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No expenses recorded yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

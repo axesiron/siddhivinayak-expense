@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Analytics · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">Expense Analytics</h5>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="panel h-100">
+      <div class="panel-title">Monthly Expense Trend</div>
+      <canvas id="monthlyChart" height="110"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel h-100">
+      <div class="panel-title">Category Breakdown</div>
+      <canvas id="categoryChart" height="110"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <div class="panel-title">Food Expense <span class="text-muted fw-normal small">(last 30 days)</span></div>
+      <canvas id="foodChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <div class="panel-title">Transport / Courier Expense <span class="text-muted fw-normal small">(last 30 days)</span></div>
+      <canvas id="transportChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <div class="panel-title">CNG / Bus Expense <span class="text-muted fw-normal small">(last 30 days)</span></div>
+      <canvas id="cngChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <div class="panel-title">KM Travel <span class="text-muted fw-normal small">(last 30 days)</span></div>
+      <canvas id="kmChart" height="90"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ monthly_labels|tojson }},
+    datasets: [{
+      label: 'Expense (₹)',
+      data: {{ monthly_values|tojson }},
+      backgroundColor: '#2f7c8f',
+      borderRadius: 6
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'doughnut',
+  data: {
+    labels: {{ category_labels|tojson }},
+    datasets: [{
+      data: {{ category_values|tojson }},
+      backgroundColor: ['#2fa66a','#1f4e5f','#2f7c8f','#f2b134','#c0392b']
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+
+const dayLabels = {{ day_labels|tojson }};
+
+new Chart(document.getElementById('foodChart'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{ label: 'Food (₹)', data: {{ food_series|tojson }}, backgroundColor: '#f2b134', borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('transportChart'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{ label: 'Transport/Courier (₹)', data: {{ transport_series|tojson }}, backgroundColor: '#1f4e5f', borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('cngChart'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{ label: 'CNG/Bus (₹)', data: {{ cng_series|tojson }}, backgroundColor: '#2f7c8f', borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('kmChart'), {
+  type: 'line',
+  data: {
+    labels: dayLabels,
+    datasets: [{
+      label: 'KM Travelled', data: {{ km_series|tojson }},
+      borderColor: '#2fa66a', backgroundColor: 'rgba(47,166,106,0.12)',
+      fill: true, tension: 0.3, pointRadius: 2
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endblock %}

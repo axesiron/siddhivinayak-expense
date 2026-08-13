@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Employees · {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <h5 class="fw-bold mb-0">Employees</h5>
+  <a href="{{ url_for('admin.add_employee') }}" class="btn btn-brand btn-sm"><i class="fa-solid fa-user-plus me-1"></i>Add Employee</a>
+</div>
+
+<div class="panel mb-3">
+  <form method="GET" class="row g-2">
+    <div class="col-md-6">
+      <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Search by name, email or designation">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-brand btn-sm w-100">Search</button>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Email</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>{{ emp.employee_code }}</td>
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.designation }}</td>
+          <td>{{ emp.email }}</td>
+          <td>{{ emp.mobile or '—' }}</td>
+          <td><span class="status-badge {{ 'blocked' if emp.is_blocked else 'active' }}">{{ 'Blocked' if emp.is_blocked else 'Active' }}</span></td>
+          <td class="text-nowrap">
+            <a href="{{ url_for('admin.edit_employee', emp_id=emp.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-pen"></i></a>
+            <a href="{{ url_for('admin.all_expenses', employee_id=emp.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-receipt"></i></a>
+            <form method="POST" action="{{ url_for('admin.toggle_block', emp_id=emp.id) }}" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-warning"><i class="fa-solid {{ 'fa-lock-open' if emp.is_blocked else 'fa-lock' }}"></i></button>
+            </form>
+            <form method="POST" action="{{ url_for('admin.delete_employee', emp_id=emp.id) }}" class="d-inline" data-confirm-delete="Delete this employee and all of their expense records?">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No employees found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

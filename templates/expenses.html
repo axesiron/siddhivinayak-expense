@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}My Expenses · {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <h5 class="fw-bold mb-0">My Expenses</h5>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('employee.add_expense') }}" class="btn btn-brand btn-sm"><i class="fa-solid fa-plus me-1"></i>Add Expense</a>
+    <a href="{{ url_for('excel.export_all') }}" class="btn btn-outline-brand btn-sm"><i class="fa-solid fa-file-excel me-1"></i>Download Excel</a>
+  </div>
+</div>
+
+<div class="panel mb-3">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label mb-1">Search</label>
+      <input type="text" name="q" value="{{ search }}" class="form-control form-control-sm" placeholder="Reason / From / To">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label mb-1">From Date</label>
+      <input type="date" name="from_date" value="{{ from_date }}" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label mb-1">To Date</label>
+      <input type="date" name="to_date" value="{{ to_date }}" class="form-control form-control-sm">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label mb-1">Mode</label>
+      <select name="mode" class="form-select form-select-sm">
+        <option value="">All</option>
+        {% for m in ["Bike","Bus","Train","Car","Auto","Cab","Other"] %}
+        <option value="{{ m }}" {{ 'selected' if mode == m }}>{{ m }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-brand btn-sm w-100"><i class="fa-solid fa-search"></i></button>
+    </div>
+  </form>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Transactions</div><div class="stat-value fs-4">{{ summary.count }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Total KM</div><div class="stat-value fs-4">{{ "%.0f"|format(summary.km) }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Food + Transport</div><div class="stat-value fs-4">₹{{ "%.0f"|format(summary.food + summary.transport) }}</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card py-3"><div class="stat-label">Grand Total</div><div class="stat-value fs-4">₹{{ "%.0f"|format(summary.grand_total) }}</div></div></div>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table-modern">
+      <thead>
+        <tr>
+          <th>SR.NO</th><th>DATE</th><th>REASON</th><th>MODE</th><th>FROM</th><th>TO</th>
+          <th>OTHER</th><th>CNG/BUS</th><th>KM</th><th>COURIER/TRANSPORT</th><th>FOOD</th><th>TOTAL</th><th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in expenses %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ e.expense_date.strftime('%d-%m-%y') }}</td>
+          <td>{{ e.reason }}</td>
+          <td class="text-capitalize">{{ e.mode }}</td>
+          <td>{{ e.from_location }}</td>
+          <td>{{ e.to_location }}</td>
+          <td>{{ "₹%.0f"|format(e.other_amount) if e.other_amount else "—" }}</td>
+          <td>{{ "₹%.0f"|format(e.cng_bus_amount) if e.cng_bus_amount else "—" }}</td>
+          <td>{{ e.km|int if e.km else "—" }}</td>
+          <td>{{ "₹%.0f"|format(e.courier_transport_amount) if e.courier_transport_amount else "—" }}</td>
+          <td>{{ "₹%.0f"|format(e.food_amount) if e.food_amount else "—" }}</td>
+          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+          <td class="text-nowrap">
+            <a href="{{ url_for('employee.edit_expense', expense_id=e.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-pen"></i></a>
+            <form method="POST" action="{{ url_for('employee.delete_expense', expense_id=e.id) }}" class="d-inline" data-confirm-delete="Are you sure you want to delete this expense?">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="13" class="text-center text-muted py-4">No expenses found for the selected filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<a href="{{ url_for('employee.add_expense') }}" class="fab-add d-lg-none"><i class="fa-solid fa-plus"></i></a>
+{% endblock %}
