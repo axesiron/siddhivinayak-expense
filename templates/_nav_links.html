@@ -1,0 +1,19 @@
+{% if current_user.is_admin %}
+  <a href="{{ url_for('admin.dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+  <a href="{{ url_for('admin.employees') }}" class="nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('admin.employ') }}"><i class="fa-solid fa-users"></i> Employees</a>
+  <a href="{{ url_for('admin.all_expenses') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.all_expenses' }}"><i class="fa-solid fa-receipt"></i> All Expenses</a>
+  <a href="{{ url_for('admin.reports') }}" class="nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('admin.reports') or request.endpoint == 'admin.employee_report' }}"><i class="fa-solid fa-chart-line"></i> Reports</a>
+  <a href="{{ url_for('excel.export_all_employees') }}" class="nav-link"><i class="fa-solid fa-file-excel"></i> Excel Export</a>
+  <a href="{{ url_for('admin.rates') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.rates' }}"><i class="fa-solid fa-road"></i> KM Rates</a>
+  <a href="{{ url_for('admin.settings') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.settings' }}"><i class="fa-solid fa-gear"></i> Settings</a>
+  <a href="{{ url_for('admin.account') }}" class="nav-link {{ 'active' if request.endpoint == 'admin.account' }}"><i class="fa-solid fa-user-gear"></i> My Account</a>
+{% else %}
+  <a href="{{ url_for('employee.dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.dashboard' }}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+  <a href="{{ url_for('employee.expenses') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.expenses' }}"><i class="fa-solid fa-list"></i> My Expenses</a>
+  <a href="{{ url_for('employee.add_expense') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.add_expense' }}"><i class="fa-solid fa-circle-plus"></i> Add Expense</a>
+  <a href="{{ url_for('employee.daily_report') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.daily_report' }}"><i class="fa-solid fa-calendar-day"></i> Daily Report</a>
+  <a href="{{ url_for('employee.monthly_report') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.monthly_report' }}"><i class="fa-solid fa-calendar"></i> Monthly Report</a>
+  <a href="{{ url_for('excel.export_all') }}" class="nav-link"><i class="fa-solid fa-file-excel"></i> Excel Reports</a>
+  <a href="{{ url_for('employee.analytics') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.analytics' }}"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+  <a href="{{ url_for('employee.profile') }}" class="nav-link {{ 'active' if request.endpoint == 'employee.profile' }}"><i class="fa-solid fa-user"></i> Profile</a>
+{% endif %}

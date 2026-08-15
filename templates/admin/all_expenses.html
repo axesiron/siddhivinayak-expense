@@ -35,11 +35,11 @@
     <div class="col-md-1">
       <button class="btn btn-brand btn-sm w-100">Filter</button>
     </div>
+    {% if filters.get('employee_id') %}
     <div class="col-md-2">
-      {% if filters.get('employee_id') %}
       <a class="btn btn-outline-brand btn-sm w-100" href="{{ url_for('excel.export_employee', employee_id=filters.get('employee_id'), from_date=filters.get('from_date'), to_date=filters.get('to_date')) }}"><i class="fa-solid fa-file-excel me-1"></i>Excel</a>
-      {% endif %}
     </div>
+    {% endif %}
   </form>
 </div>
 
@@ -55,14 +55,14 @@
       <tbody>
         {% for e in expenses %}
         <tr>
-          <td>{{ e.employee.name }}</td>
-          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
-          <td>{{ e.reason }}</td>
-          <td class="text-capitalize">{{ e.mode }}</td>
-          <td>{{ e.from_location }} → {{ e.to_location }}</td>
-          <td>{{ e.km|int if e.km else "—" }}</td>
-          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
-          <td class="text-nowrap">
+          <td class="mobile-full">{{ e.employee.name }}</td>
+          <td data-label="Date">{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td data-label="Reason">{{ e.reason }}</td>
+          <td data-label="Mode" class="text-capitalize">{{ e.mode }}</td>
+          <td data-label="Route">{{ e.from_location }} → {{ e.to_location }}</td>
+          <td data-label="KM">{{ e.km|int if e.km else "—" }}</td>
+          <td data-label="Total" class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+          <td class="text-nowrap mobile-actions">
             <a href="{{ url_for('employee.edit_expense', expense_id=e.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-pen"></i></a>
             <form method="POST" action="{{ url_for('employee.delete_expense', expense_id=e.id) }}" class="d-inline" data-confirm-delete="Delete this expense record?">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

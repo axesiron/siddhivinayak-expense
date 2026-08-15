@@ -58,19 +58,19 @@
       <tbody>
         {% for e in expenses %}
         <tr>
-          <td>{{ loop.index }}</td>
-          <td>{{ e.expense_date.strftime('%d-%m-%y') }}</td>
-          <td>{{ e.reason }}</td>
-          <td class="text-capitalize">{{ e.mode }}</td>
-          <td>{{ e.from_location }}</td>
-          <td>{{ e.to_location }}</td>
-          <td>{{ "₹%.0f"|format(e.other_amount) if e.other_amount else "—" }}</td>
-          <td>{{ "₹%.0f"|format(e.cng_bus_amount) if e.cng_bus_amount else "—" }}</td>
-          <td>{{ e.km|int if e.km else "—" }}</td>
-          <td>{{ "₹%.0f"|format(e.courier_transport_amount) if e.courier_transport_amount else "—" }}</td>
-          <td>{{ "₹%.0f"|format(e.food_amount) if e.food_amount else "—" }}</td>
-          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
-          <td class="text-nowrap">
+          <td data-label="Sr">{{ loop.index }}</td>
+          <td data-label="Date">{{ e.expense_date.strftime('%d-%m-%y') }}</td>
+          <td class="mobile-full">{{ e.reason }}</td>
+          <td data-label="Mode" class="text-capitalize">{{ e.mode }}</td>
+          <td data-label="From">{{ e.from_location }}</td>
+          <td data-label="To">{{ e.to_location }}</td>
+          <td data-label="Other">{{ "₹%.0f"|format(e.other_amount) if e.other_amount else "—" }}</td>
+          <td data-label="CNG/Bus">{{ "₹%.0f"|format(e.cng_bus_amount) if e.cng_bus_amount else "—" }}</td>
+          <td data-label="KM">{{ e.km|int if e.km else "—" }}</td>
+          <td data-label="Courier/Transport">{{ "₹%.0f"|format(e.courier_transport_amount) if e.courier_transport_amount else "—" }}</td>
+          <td data-label="Food">{{ "₹%.0f"|format(e.food_amount) if e.food_amount else "—" }}</td>
+          <td data-label="Total" class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+          <td class="text-nowrap mobile-actions">
             <a href="{{ url_for('employee.edit_expense', expense_id=e.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-pen"></i></a>
             <form method="POST" action="{{ url_for('employee.delete_expense', expense_id=e.id) }}" class="d-inline" data-confirm-delete="Are you sure you want to delete this expense?">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

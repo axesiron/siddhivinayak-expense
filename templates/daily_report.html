@@ -42,11 +42,11 @@
       <tbody>
         {% for e in items %}
         <tr>
-          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
-          <td>{{ e.reason }}</td>
-          <td class="text-capitalize">{{ e.mode }}</td>
-          <td>{{ e.from_location }} → {{ e.to_location }}</td>
-          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+          <td data-label="Date">{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td class="mobile-full">{{ e.reason }}</td>
+          <td data-label="Mode" class="text-capitalize">{{ e.mode }}</td>
+          <td data-label="Route">{{ e.from_location }} → {{ e.to_location }}</td>
+          <td data-label="Total" class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
         </tr>
         {% else %}
         <tr><td colspan="5" class="text-center text-muted py-4">No expenses in this range.</td></tr>

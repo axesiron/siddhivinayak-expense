@@ -8,7 +8,7 @@
     <h4 class="fw-bold mb-1">Good day, {{ current_user.name.split(' ')[0] }} 👋</h4>
     <div class="text-muted small">{{ current_user.designation }} · Period {{ period_from.strftime('%d %b %Y') }} → {{ period_to.strftime('%d %b %Y') }}</div>
   </div>
-  <a href="{{ url_for('employee.add_expense') }}" class="btn btn-brand"><i class="fa-solid fa-circle-plus me-1"></i> Add Daily Expense</a>
+  <a href="{{ url_for('employee.add_expense') }}" class="btn btn-brand d-none d-lg-inline-block"><i class="fa-solid fa-circle-plus me-1"></i> Add Daily Expense</a>
 </div>
 
 <div class="row g-3 mb-4">
@@ -63,11 +63,11 @@
           <tbody>
             {% for e in recent %}
             <tr>
-              <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
-              <td>{{ e.reason }}</td>
-              <td class="text-capitalize">{{ e.mode }}</td>
-              <td>{{ e.from_location }} → {{ e.to_location }}</td>
-              <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+              <td data-label="Date">{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+              <td class="mobile-full">{{ e.reason }}</td>
+              <td data-label="Mode" class="text-capitalize">{{ e.mode }}</td>
+              <td data-label="Route">{{ e.from_location }} → {{ e.to_location }}</td>
+              <td data-label="Total" class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
             </tr>
             {% endfor %}
           </tbody>

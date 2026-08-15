@@ -7,7 +7,9 @@
     <h4 class="fw-bold mb-1">Admin Dashboard</h4>
     <div class="text-muted small">Overview of all employee expenses</div>
   </div>
-  <a href="{{ url_for('excel.export_all_employees') }}" class="btn btn-brand"><i class="fa-solid fa-file-excel me-1"></i>Export All Employees</a>
+  <a href="{{ url_for('excel.export_all_employees') }}" class="btn btn-brand btn-sm">
+    <i class="fa-solid fa-file-excel me-1"></i><span class="d-none d-sm-inline">Export All Employees</span><span class="d-sm-none">Export</span>
+  </a>
 </div>
 
 <div class="row g-3 mb-4">
@@ -39,11 +41,11 @@
       <tbody>
         {% for e in recent_expenses %}
         <tr>
-          <td>{{ e.employee.name }}</td>
-          <td>{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
-          <td>{{ e.reason }}</td>
-          <td class="text-capitalize">{{ e.mode }}</td>
-          <td class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
+          <td class="mobile-full">{{ e.employee.name }}</td>
+          <td data-label="Date">{{ e.expense_date.strftime('%d-%m-%Y') }}</td>
+          <td data-label="Reason">{{ e.reason }}</td>
+          <td data-label="Mode" class="text-capitalize">{{ e.mode }}</td>
+          <td data-label="Total" class="fw-bold">₹{{ "%.2f"|format(e.total_amount) }}</td>
         </tr>
         {% else %}
         <tr><td colspan="5" class="text-center text-muted py-4">No expenses recorded yet.</td></tr>

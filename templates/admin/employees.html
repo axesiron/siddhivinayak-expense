@@ -25,13 +25,13 @@
       <tbody>
         {% for emp in employees %}
         <tr>
-          <td>{{ emp.employee_code }}</td>
-          <td>{{ emp.name }}</td>
-          <td>{{ emp.designation }}</td>
-          <td>{{ emp.email }}</td>
-          <td>{{ emp.mobile or '—' }}</td>
-          <td><span class="status-badge {{ 'blocked' if emp.is_blocked else 'active' }}">{{ 'Blocked' if emp.is_blocked else 'Active' }}</span></td>
-          <td class="text-nowrap">
+          <td data-label="ID">{{ emp.employee_code }}</td>
+          <td class="mobile-full">{{ emp.name }}</td>
+          <td data-label="Designation">{{ emp.designation }}</td>
+          <td data-label="Email">{{ emp.email }}</td>
+          <td data-label="Mobile">{{ emp.mobile or '—' }}</td>
+          <td data-label="Status"><span class="status-badge {{ 'blocked' if emp.is_blocked else 'active' }}">{{ 'Blocked' if emp.is_blocked else 'Active' }}</span></td>
+          <td class="text-nowrap mobile-actions">
             <a href="{{ url_for('admin.edit_employee', emp_id=emp.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-pen"></i></a>
             <a href="{{ url_for('admin.all_expenses', employee_id=emp.id) }}" class="btn btn-sm btn-outline-brand"><i class="fa-solid fa-receipt"></i></a>
             <form method="POST" action="{{ url_for('admin.toggle_block', emp_id=emp.id) }}" class="d-inline">

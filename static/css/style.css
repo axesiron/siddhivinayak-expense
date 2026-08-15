@@ -14,12 +14,16 @@
 }
 
 *{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
 body{
   font-family:'Inter',system-ui,-apple-system,sans-serif;
   background:var(--bg);
   color:var(--text);
   margin:0;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
 }
+a, button{-webkit-tap-highlight-color:transparent;}
 
 /* ---------- Auth pages ---------- */
 .auth-wrap{
@@ -143,8 +147,100 @@ body{
 }
 
 @media (max-width:991px){
-  .content-area{padding:16px;padding-bottom:90px;}
+  .content-area{padding:16px;padding-bottom:96px;}
   .topbar{padding:0 16px;}
+}
+
+/* ---------- Mobile-first refinements (<=767px) ---------- */
+@media (max-width:767px){
+  .content-area{padding:12px;padding-bottom:100px;}
+  .topbar{height:58px;padding:0 12px;}
+
+  h4.fw-bold, h5.fw-bold{font-size:1.1rem;}
+
+  .stat-card{padding:14px;border-radius:14px;}
+  .stat-card .stat-icon{width:36px;height:36px;font-size:15px;margin-bottom:8px;}
+  .stat-card .stat-value{font-size:1.25rem;}
+  .stat-card .stat-label{font-size:.7rem;}
+
+  .panel{padding:14px;border-radius:14px;}
+
+  /* Bigger, thumb-friendly tap targets everywhere on touch screens */
+  .btn{min-height:42px;padding-top:.55rem;padding-bottom:.55rem;}
+  .btn-sm{min-height:36px;}
+  .table-modern .btn-sm{min-height:34px;min-width:34px;}
+  .form-control,.form-select{min-height:44px;font-size:16px;} /* 16px prevents iOS auto-zoom on focus */
+
+  /* Action buttons in table cards wrap and have breathing room */
+  .table-modern td .btn{margin:2px 4px 2px 0;}
+
+  /* ---- Responsive "card" tables: header row hidden, each row becomes
+     a stacked card with label:value pairs. Applies to every .table-modern
+     inside a .table-responsive wrapper site-wide (expense lists, admin
+     tables, reports) so nobody has to scroll sideways through 13 columns
+     on a phone. ---- */
+  .table-responsive .table-modern thead{display:none;}
+  .table-responsive .table-modern, 
+  .table-responsive .table-modern tbody,
+  .table-responsive .table-modern tr,
+  .table-responsive .table-modern td{display:block;width:100%;}
+  .table-responsive{overflow-x:visible;}
+  .table-responsive .table-modern tr{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    margin-bottom:12px;padding:6px 14px;box-shadow:var(--shadow);
+  }
+  .table-responsive .table-modern tbody tr:hover{background:var(--card);}
+  .table-responsive .table-modern td{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:10px 0;border-bottom:1px solid var(--bg);text-align:right;white-space:normal;
+  }
+  .table-responsive .table-modern td:last-child{border-bottom:none;}
+  .table-responsive .table-modern td:empty{display:block;text-align:center;padding:20px 0;}
+  .table-responsive .table-modern td.text-center.text-muted{
+    display:block;text-align:center;padding:20px 0;
+  }
+  .table-responsive .table-modern td::before{
+    content:attr(data-label);
+    font-weight:600;color:var(--muted);font-size:.68rem;text-transform:uppercase;
+    letter-spacing:.3px;text-align:left;flex-shrink:0;
+  }
+  .table-responsive .table-modern td[data-label=""]::before,
+  .table-responsive .table-modern td:not([data-label])::before{content:none;}
+  .table-responsive .table-modern td.mobile-full{
+    justify-content:flex-start;text-align:left;font-weight:700;font-size:.95rem;
+    padding-top:14px;
+  }
+  .table-responsive .table-modern td.mobile-full::before{content:none;}
+  .table-responsive .table-modern td.mobile-actions{
+    justify-content:flex-end;padding-top:12px;
+  }
+  .table-responsive .table-modern td.mobile-actions::before{content:none;}
+
+  .fab-add{bottom:80px;right:16px;width:52px;height:52px;font-size:20px;}
+
+  .auth-card{padding:28px 22px;border-radius:16px;}
+  .auth-wrap{padding:14px;}
+}
+
+/* Bottom nav — respect the home-indicator / gesture-bar safe area on
+   notched phones so tap targets never sit under the OS gesture strip */
+.bottom-nav{padding-bottom:env(safe-area-inset-bottom, 0);}
+.bottom-nav a{padding:8px 2px;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+
+/* ---------- "More" drawer (mobile) ---------- */
+.offcanvas{max-width:300px;}
+.offcanvas-header{border-bottom:1px solid var(--border);}
+.drawer-nav{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
+.drawer-nav .nav-link{
+  color:var(--text);padding:13px 14px;border-radius:10px;font-size:.92rem;font-weight:500;
+  display:flex;align-items:center;gap:12px;min-height:44px;
+}
+.drawer-nav .nav-link i{width:20px;text-align:center;color:var(--brand);}
+.drawer-nav .nav-link.active{background:var(--accent-soft);color:var(--accent);font-weight:700;}
+.drawer-nav .nav-link.active i{color:var(--accent);}
+.drawer-logout{
+  color:#c0392b;padding:13px 14px;font-size:.92rem;text-decoration:none;
+  display:flex;gap:12px;align-items:center;min-height:44px;border-top:1px solid var(--border);margin-top:8px;
 }
 
 .form-label{font-weight:600;font-size:.85rem;}
