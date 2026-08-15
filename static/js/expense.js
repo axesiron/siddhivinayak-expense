@@ -3,11 +3,18 @@
   if (!form) return;
 
   const fields = ["mode", "km", "other_amount", "cng_bus_amount",
-                   "courier_transport_amount", "food_amount"];
+                   "courier_transport_amount", "food_amount", "fuel_type"];
   const totalDisplay = document.getElementById("totalPreview");
   const kmRateNote = document.getElementById("kmRateNote");
+  const modeSelect = document.getElementById("modeSelect");
+  const fuelTypeWrap = document.getElementById("fuelTypeWrap");
 
   let timer = null;
+
+  function toggleFuelType() {
+    if (!modeSelect || !fuelTypeWrap) return;
+    fuelTypeWrap.style.display = modeSelect.value === "Car" ? "block" : "none";
+  }
 
   function recalc() {
     clearTimeout(timer);
@@ -39,5 +46,13 @@
     if (el) el.addEventListener("change", recalc);
   });
 
+  if (modeSelect) {
+    modeSelect.addEventListener("change", function () {
+      toggleFuelType();
+      recalc();
+    });
+  }
+
+  toggleFuelType();
   recalc();
 })();

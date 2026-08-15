@@ -12,13 +12,15 @@ def apply_rounding(value, mode="nearest"):
     return math.floor(value + 0.5)
 
 
-def get_km_rate(mode, rates):
+def get_km_rate(mode, rates, fuel_type=None):
     """rates -> ExpenseRate row"""
     mode = (mode or "").lower()
+    fuel_type = (fuel_type or "petrol").lower()
+
     if mode == "bike":
         return rates.bike_rate
     if mode == "car":
-        return rates.car_rate
+        return rates.car_cng_rate if fuel_type == "cng" else rates.car_petrol_rate
     # bus / train / auto / cab / other -> no automatic KM costing,
     # CNG/Bus field is used instead. Fallback to "other vehicle" rate
     # only if the user explicitly logs KM for an uncovered mode.
@@ -26,14 +28,14 @@ def get_km_rate(mode, rates):
 
 
 def calculate_expense(mode, km, other_amount, cng_bus_amount, courier_transport_amount,
-                       food_amount, rates):
+                       food_amount, rates, fuel_type=None):
     km = float(km or 0)
     other_amount = float(other_amount or 0)
     cng_bus_amount = float(cng_bus_amount or 0)
     courier_transport_amount = float(courier_transport_amount or 0)
     food_amount = float(food_amount or 0)
 
-    km_rate = get_km_rate(mode, rates)
+    km_rate = get_km_rate(mode, rates, fuel_type)
     km_amount_raw = km * km_rate
     km_amount = apply_rounding(km_amount_raw, rates.rounding) if km_rate else 0
 

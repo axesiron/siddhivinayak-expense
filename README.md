@@ -27,7 +27,88 @@ created automatically on first run:
 
 Change both passwords before any real use.
 
-## Database: SQLite by default, MySQL-ready
+## Deploying live (Render — free tier)
+
+The repo is already set up for this: `Procfile`, `gunicorn` in
+`requirements.txt`, `render.yaml`, and `config.py` handles Render's
+Postgres connection string automatically.
+
+**Note on SQLite:** Render's free web service disk is wiped on every
+deploy/restart, so SQLite (the local default) won't persist. Use Render's
+free PostgreSQL database instead — the steps below set that up for you.
+
+### 1. Push this code to GitHub
+```bash
+cd siddhivinayak_expense_manager
+git init
+git add .
+git commit -m "Initial commit"
+```
+Create a new empty repo on GitHub (github.com/new), then:
+```bash
+git remote add origin https://github.com/<your-username>/<repo-name>.git
+git branch -M main
+git push -u origin main
+```
+
+### 2. Deploy on Render
+**Option A — one-click Blueprint (recommended):**
+1. Go to [dashboard.render.com/blueprints](https://dashboard.render.com/blueprints) → **New Blueprint Instance**.
+2. Connect the GitHub repo you just pushed. Render reads `render.yaml`
+   and automatically provisions both the web service *and* a free
+   PostgreSQL database, wired together via `DATABASE_URL`.
+3. Click **Apply** — first deploy takes a few minutes.
+
+**Option B — manual setup:**
+1. **New +** → **PostgreSQL** → name it, free plan → **Create Database**.
+   Copy the "Internal Database URL" once it's ready.
+2. **New +** → **Web Service** → connect your repo.
+   - Build command: `pip install -r requirements.txt`
+   - Start command: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
+   - Add environment variables: `DATABASE_URL` (paste the URL from step 1)
+     and `SECRET_KEY` (any long random string).
+3. **Create Web Service** — Render builds and deploys automatically.
+
+### 3. First login
+Render runs `db.create_all()` and seeds the demo admin/employee accounts
+automatically on first boot, same as local — visit your new
+`https://<your-app>.onrender.com` and log in with the demo credentials
+from the Quick Start section above, **then change both passwords**
+immediately since the app is now public.
+
+### Notes
+- Free-tier Render web services spin down after inactivity and take ~30s
+  to wake back up on the next request — normal for the free plan, not a bug.
+- The demo seed data (admin + one employee account) is created automatically
+  the first time the app starts against a fresh, empty database.
+- For a custom domain, Render's dashboard has a straightforward "Custom
+  Domains" tab under the web service settings.
+
+## Installing as a mobile app (PWA → optional real .apk)
+
+This app ships as a **Progressive Web App**: a manifest
+(`static/manifest.json`), app icons, and a service worker (`/sw.js`,
+scoped to the whole app) are already wired in. Once it's deployed live
+with HTTPS (Render gives you this automatically, see above):
+
+**Just install it (no APK needed):**
+1. Open the live URL in Chrome on Android.
+2. Chrome shows an **"Install app"** prompt (or: menu ⋮ → **Add to Home
+   screen**).
+3. It installs with a real icon, opens full-screen with no browser bar,
+   and behaves like a native app — fastest path, nothing else required.
+
+**If you specifically need a downloadable `.apk` file** (e.g. to
+side-load or publish to the Play Store), use
+[PWABuilder](https://www.pwabuilder.com) — a free Microsoft-run tool that
+packages any PWA into a signed Android package, no dev machine or Android
+Studio required:
+1. Deploy the app live (Render, above).
+2. Go to pwabuilder.com, paste your `https://<your-app>.onrender.com` URL.
+3. It reads `manifest.json` automatically (already configured here) →
+   choose **Android** → **Download Package** → you get a real `.apk`/`.aab`.
+
+## Database: SQLite locally, Postgres/MySQL in production
 
 The app runs on **SQLite out of the box** (a single `siddhivinayak.db`
 file, zero setup) so it works immediately. The brief specifies MySQL —

@@ -106,6 +106,7 @@ def add_expense():
     if request.method == "POST":
         rates = get_rates()
         mode = request.form.get("mode", "")
+        fuel_type = request.form.get("fuel_type", "Petrol")
         km = request.form.get("km") or 0
         other_amount = request.form.get("other_amount") or 0
         cng_bus_amount = request.form.get("cng_bus_amount") or 0
@@ -113,13 +114,14 @@ def add_expense():
         food_amount = request.form.get("food_amount") or 0
 
         calc = calculate_expense(mode, km, other_amount, cng_bus_amount,
-                                  courier_transport_amount, food_amount, rates)
+                                  courier_transport_amount, food_amount, rates, fuel_type)
 
         expense = Expense(
             employee_id=current_user.id,
             expense_date=parse_date(request.form.get("expense_date"), date.today()),
             reason=request.form.get("reason", "").strip(),
             mode=mode,
+            fuel_type=fuel_type if mode.lower() == "car" else None,
             from_location=request.form.get("from_location", "").strip(),
             to_location=request.form.get("to_location", "").strip(),
             other_amount=float(other_amount or 0),
@@ -151,6 +153,7 @@ def edit_expense(expense_id):
     if request.method == "POST":
         rates = get_rates()
         mode = request.form.get("mode", "")
+        fuel_type = request.form.get("fuel_type", "Petrol")
         km = request.form.get("km") or 0
         other_amount = request.form.get("other_amount") or 0
         cng_bus_amount = request.form.get("cng_bus_amount") or 0
@@ -158,11 +161,12 @@ def edit_expense(expense_id):
         food_amount = request.form.get("food_amount") or 0
 
         calc = calculate_expense(mode, km, other_amount, cng_bus_amount,
-                                  courier_transport_amount, food_amount, rates)
+                                  courier_transport_amount, food_amount, rates, fuel_type)
 
         expense.expense_date = parse_date(request.form.get("expense_date"), expense.expense_date)
         expense.reason = request.form.get("reason", "").strip()
         expense.mode = mode
+        expense.fuel_type = fuel_type if mode.lower() == "car" else None
         expense.from_location = request.form.get("from_location", "").strip()
         expense.to_location = request.form.get("to_location", "").strip()
         expense.other_amount = float(other_amount or 0)
@@ -208,6 +212,7 @@ def api_calculate_total():
         request.args.get("courier_transport_amount"),
         request.args.get("food_amount"),
         rates,
+        request.args.get("fuel_type", "Petrol"),
     )
     return jsonify(calc)
 

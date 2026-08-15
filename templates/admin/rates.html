@@ -13,12 +13,16 @@
         <input type="number" step="0.01" name="bike_rate" class="form-control" value="{{ rates.bike_rate }}" required>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Car Rate (₹/km)</label>
-        <input type="number" step="0.01" name="car_rate" class="form-control" value="{{ rates.car_rate }}" required>
-      </div>
-      <div class="col-md-6">
         <label class="form-label">Other Vehicle Rate (₹/km)</label>
         <input type="number" step="0.01" name="other_rate" class="form-control" value="{{ rates.other_rate }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Car — Petrol Rate (₹/km)</label>
+        <input type="number" step="0.01" name="car_petrol_rate" class="form-control" value="{{ rates.car_petrol_rate }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Car — CNG Rate (₹/km)</label>
+        <input type="number" step="0.01" name="car_cng_rate" class="form-control" value="{{ rates.car_cng_rate }}" required>
       </div>
       <div class="col-md-6">
         <label class="form-label">Rounding Rule</label>
@@ -32,7 +36,7 @@
     </div>
     <div class="text-muted small mt-3">
       When Mode = Bike, KM × Bike Rate is added to the total automatically.<br>
-      When Mode = Car, KM × Car Rate is used instead.<br>
+      When Mode = Car, the employee also picks Petrol or CNG — KM × the matching rate above is used.<br>
       For Bus/Train/Auto/Cab/Other, KM is not auto-costed — use the CNG/Bus field.
     </div>
     <button type="submit" class="btn btn-brand px-4 mt-3">Save Rates</button>

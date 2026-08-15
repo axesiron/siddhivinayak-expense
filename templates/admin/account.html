@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}My Account · {{ app_name }}{% endblock %}
+{% block content %}
+
+<h5 class="fw-bold mb-3">My Account</h5>
+
+<div class="panel" style="max-width:560px;">
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+      <div class="col-12">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-control" value="{{ current_user.name }}" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-control" value="{{ current_user.email }}" readonly>
+        <div class="small text-muted mt-1">Email cannot be changed here.</div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Mobile</label>
+        <input type="text" name="mobile" class="form-control" value="{{ current_user.mobile or '' }}">
+      </div>
+    </div>
+
+    <hr class="my-4">
+    <div class="panel-title mb-1" style="font-size:1rem;">Change Password</div>
+    <div class="panel-sub">Leave blank if you don't want to change your password.</div>
+
+    <div class="row g-3">
+      <div class="col-12">
+        <label class="form-label">Current Password</label>
+        <input type="password" name="current_password" class="form-control" autocomplete="current-password">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">New Password</label>
+        <input type="password" name="new_password" class="form-control" autocomplete="new-password">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Confirm New Password</label>
+        <input type="password" name="confirm_password" class="form-control" autocomplete="new-password">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-brand px-4 mt-4">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

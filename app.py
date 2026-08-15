@@ -1,6 +1,6 @@
 import os
 from datetime import date
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, send_from_directory
 from flask_login import LoginManager, current_user
 from flask_wtf import CSRFProtect
 
@@ -44,15 +44,48 @@ def create_app(config_class=Config):
             return redirect(url_for("admin.dashboard" if current_user.is_admin else "employee.dashboard"))
         return redirect(url_for("auth.login"))
 
+    @app.route("/sw.js")
+    def service_worker():
+        # Served from the root (not /static/) so its default scope covers
+        # the whole app, letting the PWA control every page, not just assets.
+        response = send_from_directory(app.static_folder, "sw.js")
+        response.headers["Service-Worker-Allowed"] = "/"
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
     @app.context_processor
     def inject_globals():
         return {"current_year": date.today().year, "app_name": "SIDDHIVINAYAK EXPENSE MANAGER"}
 
     with app.app_context():
         db.create_all()
+        _run_light_migrations()
         _seed_defaults(app)
 
     return app
+
+
+def _run_light_migrations():
+    """db.create_all() only creates tables that don't exist yet — it never
+    alters existing tables. Since this app has no formal migration system,
+    add any new columns here with a plain ALTER TABLE, guarded so it's a
+    no-op (does nothing, raises no error) once the column already exists.
+    Safe to run on every startup, on both SQLite and Postgres."""
+    from sqlalchemy import text
+
+    statements = [
+        "ALTER TABLE expenses ADD COLUMN fuel_type VARCHAR(10)",
+        "ALTER TABLE expense_rates ADD COLUMN car_petrol_rate FLOAT DEFAULT 10.00",
+        "ALTER TABLE expense_rates ADD COLUMN car_cng_rate FLOAT DEFAULT 6.00",
+    ]
+    for stmt in statements:
+        try:
+            with db.engine.begin() as conn:
+                conn.execute(text(stmt))
+        except Exception:
+            # Column already exists (or any other non-fatal mismatch) —
+            # safe to ignore, the schema is already up to date.
+            pass
 
 
 def _seed_defaults(app):
@@ -60,7 +93,8 @@ def _seed_defaults(app):
     if not ExpenseRate.query.first():
         db.session.add(ExpenseRate(
             bike_rate=app.config["BIKE_RATE_PER_KM"],
-            car_rate=app.config["CAR_RATE_PER_KM"],
+            car_petrol_rate=app.config["CAR_PETROL_RATE_PER_KM"],
+            car_cng_rate=app.config["CAR_CNG_RATE_PER_KM"],
             other_rate=app.config["OTHER_VEHICLE_RATE_PER_KM"],
         ))
 

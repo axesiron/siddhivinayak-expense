@@ -50,6 +50,7 @@ class Expense(db.Model):
     expense_date = db.Column(db.Date, nullable=False, default=date.today)
     reason = db.Column(db.String(255), nullable=False)
     mode = db.Column(db.String(20), nullable=False)  # Bike/Bus/Train/Car/Auto/Cab/Other
+    fuel_type = db.Column(db.String(10))  # Petrol/CNG — only meaningful when mode = Car
     from_location = db.Column(db.String(120))
     to_location = db.Column(db.String(120))
 
@@ -74,7 +75,9 @@ class ExpenseRate(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     bike_rate = db.Column(db.Float, default=4.50)
-    car_rate = db.Column(db.Float, default=10.00)
+    car_rate = db.Column(db.Float, default=10.00)  # kept for backward compatibility, unused
+    car_petrol_rate = db.Column(db.Float, default=10.00)
+    car_cng_rate = db.Column(db.Float, default=6.00)
     other_rate = db.Column(db.Float, default=6.00)
     rounding = db.Column(db.String(20), default="nearest")  # nearest | up | down | none
 

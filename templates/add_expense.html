@@ -18,12 +18,21 @@
       </div>
       <div class="col-md-6">
         <label class="form-label">Mode</label>
-        <select name="mode" class="form-select" required>
+        <select name="mode" id="modeSelect" class="form-select" required>
           <option value="">Select mode</option>
           {% for m in ["Bike","Bus","Train","Car","Auto","Cab","Other"] %}
           <option value="{{ m }}" {{ 'selected' if expense and expense.mode == m }}>{{ m }}</option>
           {% endfor %}
         </select>
+      </div>
+
+      <div class="col-md-6" id="fuelTypeWrap" style="display:none;">
+        <label class="form-label">Fuel Type (Car)</label>
+        <select name="fuel_type" id="fuelTypeSelect" class="form-select">
+          <option value="Petrol" {{ 'selected' if expense and expense.fuel_type == 'Petrol' }}>Petrol</option>
+          <option value="CNG" {{ 'selected' if expense and expense.fuel_type == 'CNG' }}>CNG</option>
+        </select>
+        <div class="small text-muted mt-1">Uses the Petrol or CNG per-km rate set by admin.</div>
       </div>
 
       <div class="col-12">

@@ -48,6 +48,37 @@ def dashboard():
     return render_template("admin/admin_dashboard.html", stats=stats, recent_expenses=recent_expenses)
 
 
+@admin_bp.route("/account", methods=["GET", "POST"])
+@login_required
+@admin_required
+def account():
+    """Admin's own profile — separate from the Employees list (which only
+    shows role='employee'), so admin can always find their own settings."""
+    if request.method == "POST":
+        current_user.name = request.form.get("name", "").strip() or current_user.name
+        current_user.mobile = request.form.get("mobile", "").strip()
+
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+        if new_password:
+            if new_password != confirm_password:
+                flash("New password and confirm password do not match.", "danger")
+                return redirect(url_for("admin.account"))
+            current_password = request.form.get("current_password", "")
+            if not current_user.check_password(current_password):
+                flash("Current password is incorrect.", "danger")
+                return redirect(url_for("admin.account"))
+            current_user.set_password(new_password)
+            flash("Account updated and password changed.", "success")
+        else:
+            flash("Account updated.", "success")
+
+        db.session.commit()
+        return redirect(url_for("admin.account"))
+
+    return render_template("admin/account.html")
+
+
 @admin_bp.route("/employees")
 @login_required
 @admin_required
@@ -279,7 +310,8 @@ def rates():
 
     if request.method == "POST":
         rates_row.bike_rate = float(request.form.get("bike_rate") or 0)
-        rates_row.car_rate = float(request.form.get("car_rate") or 0)
+        rates_row.car_petrol_rate = float(request.form.get("car_petrol_rate") or 0)
+        rates_row.car_cng_rate = float(request.form.get("car_cng_rate") or 0)
         rates_row.other_rate = float(request.form.get("other_rate") or 0)
         rates_row.rounding = request.form.get("rounding", "nearest")
         db.session.commit()
