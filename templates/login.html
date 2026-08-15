@@ -5,7 +5,7 @@
   <div class="auth-card">
     <div class="auth-logo"><i class="fa-solid fa-coins"></i></div>
     <div class="auth-title">Welcome back</div>
-    <div class="auth-sub">Sign in to SIDDHIVINAYAK EXPENSE MANAGER</div>
+    <div class="auth-sub">Sign in to {{ app_name }}</div>
 
     <form method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -27,11 +27,9 @@
       New employee? <a href="{{ url_for('auth.register') }}">Create an account</a>
     </div>
 
-    <hr class="my-3">
-    <div class="small text-muted text-center">
-      Demo admin: <code>admin@siddhivinayak.com</code> / <code>Admin@123</code><br>
-      Demo employee: <code>rajkumar@siddhivinayak.com</code> / <code>Employee@123</code>
-    </div>
+    <button id="installAppBtn" class="btn btn-outline-brand w-100 py-2 mt-3 d-none" type="button">
+      <i class="fa-solid fa-download me-1"></i> Download App
+    </button>
   </div>
 </div>
 {% endblock %}

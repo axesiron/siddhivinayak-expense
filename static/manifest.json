@@ -1,6 +1,6 @@
 {
-  "name": "Siddhivinayak Expense Manager",
-  "short_name": "SVEC Expense",
+  "name": "SETC Expense Manager",
+  "short_name": "SETC",
   "description": "Employee travel & expense tracking for Siddhivinayak Engineering & Trading Corporation",
   "start_url": "/dashboard",
   "scope": "/",

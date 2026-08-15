@@ -14,7 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SVEC Expense">
+<meta name="apple-mobile-web-app-title" content="SETC">
 {% block extra_head %}{% endblock %}
 </head>
 <body class="{% if current_user.is_authenticated %}has-shell{% endif %}">
@@ -26,7 +26,7 @@
     <div class="sidebar-brand">
       <div class="brand-mark"><i class="fa-solid fa-coins"></i></div>
       <div>
-        <div class="brand-title">SIDDHIVINAYAK</div>
+        <div class="brand-title">{{ app_name }}</div>
         <div class="brand-sub">Expense Manager</div>
       </div>
     </div>
@@ -61,9 +61,12 @@
     <header class="topbar">
       <div class="d-flex align-items-center gap-2 d-lg-none">
         <i class="fa-solid fa-coins text-primary"></i>
-        <strong>SIDDHIVINAYAK</strong>
+        <strong>{{ app_name }}</strong>
       </div>
       <div class="ms-auto d-flex align-items-center gap-3">
+        <button id="installAppBtn" class="btn btn-outline-brand btn-sm d-none" type="button">
+          <i class="fa-solid fa-download me-1"></i><span class="d-none d-sm-inline">Download App</span>
+        </button>
         <span class="badge-role">{{ 'Administrator' if current_user.is_admin else current_user.designation }}</span>
         <div class="avatar-circle">{{ current_user.name[0] }}</div>
         <span class="d-none d-md-inline fw-semibold">{{ current_user.name }}</span>

@@ -55,7 +55,7 @@ def create_app(config_class=Config):
 
     @app.context_processor
     def inject_globals():
-        return {"current_year": date.today().year, "app_name": "SIDDHIVINAYAK EXPENSE MANAGER"}
+        return {"current_year": date.today().year, "app_name": "SETC"}
 
     with app.app_context():
         db.create_all()
