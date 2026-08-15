@@ -3,7 +3,7 @@
 {% block auth_content %}
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-logo"><i class="fa-solid fa-coins"></i></div>
+    <div class="auth-logo"><img src="{{ url_for('static', filename='images/icon-192.png') }}" alt="{{ app_name }}" style="width:32px;height:32px;object-fit:contain;"></div>
     <div class="auth-title">Welcome back</div>
     <div class="auth-sub">Sign in to {{ app_name }}</div>
 
@@ -27,7 +27,7 @@
       New employee? <a href="{{ url_for('auth.register') }}">Create an account</a>
     </div>
 
-    <button id="installAppBtn" class="btn btn-outline-brand w-100 py-2 mt-3 d-none" type="button">
+    <button id="installAppBtn" class="btn btn-outline-brand w-100 py-2 mt-3" type="button">
       <i class="fa-solid fa-download me-1"></i> Download App
     </button>
   </div>

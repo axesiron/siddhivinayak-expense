@@ -9,6 +9,7 @@ excel_bp = Blueprint("excel", __name__, url_prefix="/export/excel")
 
 
 def get_company_dict():
+    default_logo = os.path.join(current_app.static_folder, "images", "icon-512.png")
     row = CompanySettings.query.first()
     if row and row.company_name:
         return {
@@ -16,14 +17,14 @@ def get_company_dict():
             "address_line1": row.address_line1,
             "address_line2": row.address_line2,
             "mobile": row.mobile,
-            "logo_path": row.logo_path,
+            "logo_path": row.logo_path or default_logo,
         }
     return {
         "name": current_app.config["COMPANY_NAME"],
         "address_line1": current_app.config["COMPANY_ADDRESS_LINE1"],
         "address_line2": current_app.config["COMPANY_ADDRESS_LINE2"],
         "mobile": current_app.config["COMPANY_MOBILE"],
-        "logo_path": None,
+        "logo_path": default_logo,
     }
 
 
